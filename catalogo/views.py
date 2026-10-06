@@ -5,6 +5,8 @@ from django.contrib.auth import logout
 from django.db.models import Q
 from .models import Videojuego
 from .forms import VideojuegoForm
+from django.http import JsonResponse
+from .models import Videojuego 
 
 
 # 1. LEER — Catálogo Público con Búsqueda y Filtro por Plataforma
@@ -82,3 +84,15 @@ def logout_view(request):
     logout(request)
     messages.info(request, 'Has cerrado sesión exitosamente. Volviendo al modo visitante.')
     return redirect('lista_videojuegos')
+
+# 6. API REST para obtener la lista de videojuegos en formato JSON
+def api_lista_videojuegos(request):
+    # Trae todos los registros de la base de datos MySQL
+    juegos = Videojuego.objects.all().values('id', 'titulo', 'plataforma', 'stock', 'precio')
+    
+    # Convierte el resultado en una lista para poder enviarlo
+    lista_juegos = list(juegos)
+    
+    # Retorna la respuesta en formato JSON nativo
+    return JsonResponse(lista_juegos, safe=False, json_dumps_params={'ensure_ascii': False})
+

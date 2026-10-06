@@ -1,152 +1,43 @@
 {% extends 'catalogo/base.html' %}
 
-{% block title %}GamerShop | Catálogo de Videojuegos{% endblock %}
-
-{% block extra_style %}
-<style>
-    .search-filter-bar {
-        background: var(--surface);
-        border: 1px solid var(--border);
-        border-radius: 16px;
-        padding: 16px;
-    }
-
-    .platform-pill {
-        font-size: 0.78rem;
-        font-weight: 600;
-        letter-spacing: 0.4px;
-        padding: 4px 12px;
-        border-radius: 999px;
-        border: 1px solid var(--border);
-        color: var(--text-muted);
-        background: var(--surface-2);
-        transition: all 0.2s ease;
-    }
-    .platform-pill:hover, .platform-pill.active {
-        background: var(--primary);
-        color: #fff;
-        border-color: var(--primary);
-    }
-
-    .badge-platform-tag {
-        font-size: 0.72rem;
-        font-weight: 700;
-        letter-spacing: 0.5px;
-        padding: 4px 10px;
-        border-radius: 6px;
-        text-transform: uppercase;
-        display: inline-block;
-    }
-    .badge-ps5, .badge-ps4 { background: rgba(59, 130, 246, 0.18); color: #93c5fd; border: 1px solid rgba(59, 130, 246, 0.3); }
-    .badge-xbox { background: rgba(16, 185, 129, 0.18); color: #6ee7b7; border: 1px solid rgba(16, 185, 129, 0.3); }
-    .badge-switch { background: rgba(239, 68, 68, 0.18); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.3); }
-    .badge-pc { background: rgba(168, 85, 247, 0.18); color: #d8b4fe; border: 1px solid rgba(168, 85, 247, 0.3); }
-    .badge-other { background: rgba(148, 163, 184, 0.18); color: #cbd5e1; border: 1px solid rgba(148, 163, 184, 0.3); }
-
-    .game-card {
-        background: var(--surface);
-        border: 1px solid var(--border);
-        border-radius: 16px;
-        transition: transform 0.25 ease, border-color 0.25s ease, box-shadow 0.25s ease;
-        overflow: hidden;
-    }
-    .game-card:hover {
-        transform: translateY(-4px);
-        border-color: rgba(79, 124, 255, 0.5);
-        box-shadow: 0 12px 28px rgba(0, 0, 0, 0.45);
-    }
-
-    .price-amount {
-        font-family: 'Sora', sans-serif;
-        font-size: 1.45rem;
-        font-weight: 800;
-        color: var(--text);
-    }
-</style>
-{% endblock %}
+{% block title %}GamerShop | Catálogo{% endblock %}
 
 {% block content %}
-    <header class="text-center pb-3">
+    <header class="text-center pb-4">
         <h1 class="display-5 fw-bold font-heading text-white mb-2">Catálogo de Videojuegos</h1>
-        <p class="text-secondary fs-6 mb-0" style="color: var(--text-muted) !important;">
+        <p class="text-secondary fs-5 mb-0" style="color: var(--text-muted) !important;">
             {% if user.is_staff %}
-                Modo Administrador: Puedes explorar, agregar, editar y eliminar registros del inventario.
+                Estás viendo el catálogo como administrador: podés agregar, editar y eliminar productos.
             {% else %}
-                Explora los mejores títulos disponibles con precios actualizados e inventario en tiempo real.
+                Estos son los títulos y precios disponibles actualmente en la tienda.
             {% endif %}
         </p>
         <div class="mx-auto mt-3 accent-bar"></div>
     </header>
 
-    <!-- Barra de búsqueda y filtros -->
-    <div class="search-filter-bar mb-4 mt-2">
-        <form method="GET" action="{% url 'lista_videojuegos' %}" class="row g-3 align-items-center">
-            <div class="col-12 col-md-6 col-lg-7">
-                <div class="input-group">
-                    <span class="input-group-text bg-transparent border-end-0 text-secondary" style="border-color: var(--border);">
-                        <i class="bi bi-search"></i>
-                    </span>
-                    <input type="text" 
-                           name="q" 
-                           class="form-control border-start-0" 
-                           placeholder="Buscar por título o plataforma..." 
-                           value="{{ query }}">
-                </div>
-            </div>
-            <div class="col-12 col-md-4 col-lg-3">
-                <select name="plataforma" class="form-select" onchange="this.form.submit()">
-                    <option value="">Todas las plataformas</option>
-                    {% for code, label in plataformas %}
-                        <option value="{{ code }}" {% if plataforma_filtro == code %}selected{% endif %}>{{ label }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-            <div class="col-12 col-md-2 col-lg-2 d-flex gap-2">
-                <button type="submit" class="btn btn-primary-custom w-100">Filtrar</button>
-                {% if query or plataforma_filtro %}
-                    <a href="{% url 'lista_videojuegos' %}" class="btn btn-outline-custom" title="Limpiar filtro">
-                        <i class="bi bi-x-lg"></i>
-                    </a>
-                {% endif %}
-            </div>
-        </form>
-    </div>
-
-    <!-- Rejilla de productos -->
-    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4 mt-2">
         {% for juego in juegos %}
         <div class="col">
-            <div class="card h-100 game-card border-0">
+            <div class="card h-100 game-card text-white border-0">
                 <div class="card-body d-flex flex-column p-4">
                     <div class="d-flex justify-content-between align-items-center mb-3">
-                        <span class="badge-platform-tag 
-                            {% if 'PS' in juego.plataforma %}badge-ps5
-                            {% elif 'Xbox' in juego.plataforma %}badge-xbox
-                            {% elif 'Switch' in juego.plataforma %}badge-switch
-                            {% elif 'PC' in juego.plataforma %}badge-pc
-                            {% else %}badge-other{% endif %}">
-                            {{ juego.get_plataforma_display|default:juego.plataforma }}
-                        </span>
-                        <span class="small {% if juego.stock > 0 %}text-success{% else %}text-danger{% endif %} fw-semibold">
-                            <i class="bi bi-boxes me-1"></i>
-                            {% if juego.stock > 0 %}Stock: {{ juego.stock }}{% else %}Agotado{% endif %}
+                        <span class="badge-platform">{{ juego.plataforma }}</span>
+                        <span class="small" style="color: var(--text-muted);">
+                            <i class="bi bi-boxes me-1"></i>Stock: {{ juego.stock }}
                         </span>
                     </div>
-
                     <h3 class="card-title h5 font-heading fw-bold text-white mb-4 flex-grow-1">{{ juego.titulo }}</h3>
-
                     <div class="mt-auto pt-3 border-top" style="border-color: var(--border) !important;">
-                        <span class="small d-block mb-1" style="color: var(--text-muted);">Precio de venta</span>
-                        <div class="price-amount">${{ juego.precio|floatformat:0 }} <span class="fs-6 text-secondary fw-normal">CLP</span></div>
+                        <span class="small d-block mb-1" style="color: var(--text-muted);">Precio</span>
+                        <div class="price-tag">${{ juego.precio|floatformat:0 }} <span class="price-currency">CLP</span></div>
                     </div>
                 </div>
-
                 {% if user.is_staff %}
                 <div class="card-footer bg-transparent border-0 d-flex gap-2 px-4 pb-4 pt-0">
-                    <a href="{% url 'editar_videojuego' juego.id %}" class="btn btn-edit-custom w-50 py-2 text-center">
+                    <a href="{% url 'editar_videojuego' juego.id %}" class="btn btn-edit-custom w-50 py-2">
                         <i class="bi bi-pencil-square me-1"></i>Editar
                     </a>
-                    <a href="{% url 'eliminar_videojuego' juego.id %}" class="btn btn-delete-custom w-50 py-2 text-center">
+                    <a href="{% url 'eliminar_videojuego' juego.id %}" class="btn btn-delete-custom w-50 py-2">
                         <i class="bi bi-trash3 me-1"></i>Borrar
                     </a>
                 </div>
@@ -155,26 +46,21 @@
         </div>
         {% empty %}
         <div class="col-12 text-center py-5">
-            <div class="surface-card col-md-8 col-lg-6 mx-auto p-5" style="border-style: dashed;">
-                <i class="bi bi-inboxes display-3 mb-3 d-block text-primary"></i>
-                <h2 class="font-heading fw-bold h4 text-white mb-2">No se encontraron videojuegos</h2>
+            <div class="empty-box col-md-8 col-lg-6 mx-auto">
+                <i class="bi bi-inboxes display-4 mb-4 d-block" style="color: var(--primary);"></i>
+                <h2 class="font-heading fw-bold h4 text-white mb-3">Aún no hay juegos en el catálogo</h2>
                 <p class="mb-4" style="color: var(--text-muted);">
-                    {% if query or plataforma_filtro %}
-                        No hay resultados que coincidan con la búsqueda "{{ query }}". Prueba borrando los filtros.
+                    {% if user.is_staff %}
+                        La conexión con la base de datos funciona correctamente, pero la tabla está vacía.
                     {% else %}
-                        El catálogo está vacío actualmente.
+                        Vuelve a revisar más tarde: el administrador está actualizando el inventario.
                     {% endif %}
                 </p>
-                <div class="d-flex justify-content-center gap-3">
-                    {% if query or plataforma_filtro %}
-                        <a href="{% url 'lista_videojuegos' %}" class="btn btn-outline-custom">Ver todos los juegos</a>
-                    {% endif %}
-                    {% if user.is_staff %}
-                        <a href="{% url 'crear_videojuego' %}" class="btn btn-primary-custom">
-                            <i class="bi bi-plus-lg me-1"></i>Agregar primer videojuego
-                        </a>
-                    {% endif %}
-                </div>
+                {% if user.is_staff %}
+                <a href="{% url 'crear_videojuego' %}" class="btn btn-primary-custom px-4">
+                    <i class="bi bi-plus-lg me-2"></i>Agregar el primer juego
+                </a>
+                {% endif %}
             </div>
         </div>
         {% endfor %}

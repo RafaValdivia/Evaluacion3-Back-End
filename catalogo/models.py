@@ -1,6 +1,7 @@
 from decimal import Decimal
 from django.db import models
-from django.core.validators import MinValueValidator
+# Se incluye MaxValueValidator para el control del límite superior
+from django.core.validators import MinValueValidator, MaxValueValidator
 from django.utils import timezone
 
 
@@ -25,12 +26,16 @@ class Videojuego(models.Model):
         default='PS5',
         verbose_name="Plataforma"
     )
-    precio = models.DecimalField(
-        max_digits=10, 
-        decimal_places=2, 
-        validators=[MinValueValidator(Decimal('1.00'))],
-        verbose_name="Precio (CLP)"
-    )
+    
+    # MODIFICACIÓN: El límite máximo de precio ahora es de $500.000 CLP
+    precio = models.IntegerField(
+    validators=[
+        MinValueValidator(1),
+        MaxValueValidator(500000, message="El precio no puede superar los $500.000 CLP.")
+    ],
+    verbose_name="Precio (CLP)"
+)
+    
     stock = models.IntegerField(
         default=0, 
         validators=[MinValueValidator(0)],
