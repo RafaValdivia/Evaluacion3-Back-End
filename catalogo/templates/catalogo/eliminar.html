@@ -1,29 +1,51 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>GamerHub | Eliminar Videojuego</title>
-    <link href="https://jsdelivr.net" rel="stylesheet">
-    <link href="https://googleapis.com" rel="stylesheet">
-    <style>
-        body { background: #0a0612; color: #f8f9fa; font-family: 'Rajdhani', sans-serif; }
-        .font-gamer { font-family: 'Orbitron', sans-serif; }
-        .danger-container { background: rgba(35, 10, 20, 0.9); border: 2px solid #dc3545; border-radius: 16px; }
-    </style>
-</head>
-<body>
-    <div class="container py-5 d-flex justify-content-center">
-        <div class="col-md-6 danger-container p-5 text-center mt-5 shadow-lg">
-            <h2 class="font-gamer text-danger mb-4">🚨 CONFIRMAR ELIMINACIÓN 🚨</h2>
-            <p class="fs-5 mb-4">¿Estás completamente seguro de eliminar el videojuego <strong class="text-info">"{{ juego.titulo }}"</strong> del inventario permanente?</p>
+{% extends 'catalogo/base.html' %}
+
+{% block title %}GamerShop | Eliminar Videojuego{% endblock %}
+
+{% block content %}
+    <div class="d-flex justify-content-center">
+        <div class="col-12 col-md-8 col-lg-6 form-container p-4 p-md-5 text-center" style="border-color: rgba(239, 68, 68, 0.4) !important;">
+            <span class="badge-role is-admin mb-3 d-inline-block">
+                <i class="bi bi-shield-check me-1"></i>Acción de Administrador
+            </span>
+            <div class="avatar-badge mb-3 mx-auto" style="width: 64px; height: 64px; border-radius: 50%; background: rgba(239, 68, 68, 0.12); border: 1px solid rgba(239, 68, 68, 0.3); display: flex; align-items: center; justify-content: center; color: var(--danger);">
+                <i class="bi bi-trash3-fill fs-3"></i>
+            </div>
+            <h2 class="font-heading fw-bold text-white mb-2 h3">Confirmar eliminación</h2>
+            <p class="mb-4 text-secondary">
+                ¿Estás seguro de que deseas eliminar permanentemente el videojuego <strong class="text-white">"{{ juego.titulo }}"</strong> ({{ juego.get_plataforma_display|default:juego.plataforma }})?
+            </p>
+
+            <div class="surface-card p-3 mb-4 text-start col-10 mx-auto" style="border-color: var(--border);">
+                <div class="d-flex justify-content-between mb-1">
+                    <span class="text-secondary small">Título:</span>
+                    <span class="fw-bold text-white">{{ juego.titulo }}</span>
+                </div>
+                <div class="d-flex justify-content-between mb-1">
+                    <span class="text-secondary small">Plataforma:</span>
+                    <span class="text-white">{{ juego.get_plataforma_display|default:juego.plataforma }}</span>
+                </div>
+                <div class="d-flex justify-content-between mb-1">
+                    <span class="text-secondary small">Precio:</span>
+                    <span class="text-white">${{ juego.precio|floatformat:0 }} CLP</span>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <span class="text-secondary small">Stock actual:</span>
+                    <span class="text-white">{{ juego.stock }} unidades</span>
+                </div>
+            </div>
+
             <form method="POST">
                 {% csrf_token %}
                 <div class="d-flex gap-3 justify-content-center">
-                    <button type="submit" class="btn btn-danger px-5 font-gamer fw-bold">SÍ, ELIMINAR</button>
-                    <a href="{% url 'lista_videojuegos' %}" class="btn btn-outline-light px-5 font-gamer fw-bold">ABORTAR</a>
+                    <button type="submit" class="btn btn-delete-custom px-4 py-2 w-50">
+                        <i class="bi bi-trash3 me-1"></i>Sí, eliminar
+                    </button>
+                    <a href="{% url 'lista_videojuegos' %}" class="btn btn-outline-custom px-4 py-2 w-50 text-center">
+                        <i class="bi bi-x-lg me-1"></i>Cancelar
+                    </a>
                 </div>
             </form>
         </div>
     </div>
-</body>
-</html>
+{% endblock %}

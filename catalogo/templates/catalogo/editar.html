@@ -1,30 +1,78 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>GamerHub | Modificar Videojuego</title>
-    <link href="https://jsdelivr.net" rel="stylesheet">
-    <link href="https://googleapis.com" rel="stylesheet">
-    <style>
-        body { background: #0a0612; color: #f8f9fa; font-family: 'Rajdhani', sans-serif; }
-        .font-gamer { font-family: 'Orbitron', sans-serif; }
-        .form-container { background: rgba(22, 15, 38, 0.9); border: 1px solid #ff007f; border-radius: 16px; box-shadow: 0 0 15px rgba(255, 0, 127, 0.2); }
-    </style>
-</head>
-<body>
-    <div class="container py-5 d-flex justify-content-center">
-        <div class="col-md-6 form-container p-5 mt-4">
-            <h2 class="text-center font-gamer text-warning mb-2">MODIFICAR REGISTRO</h2>
-            <p class="text-center text-muted mb-4">Editando: {{ juego.titulo }}</p>
-            <form method="POST">
+{% extends 'catalogo/base.html' %}
+
+{% block title %}GamerShop | Modificar Videojuego{% endblock %}
+
+{% block content %}
+    <div class="d-flex justify-content-center">
+        <div class="col-12 col-md-8 col-lg-6 form-container p-4 p-md-5">
+            <div class="d-flex align-items-center justify-content-between mb-3">
+                <span class="badge-role is-admin">
+                    <i class="bi bi-shield-check me-1"></i>Panel Administrador
+                </span>
+                <span class="small text-secondary"><i class="bi bi-pencil me-1"></i>Edición de Registro</span>
+            </div>
+
+            <h2 class="font-heading fw-bold text-white mb-1 h3">Editar Videojuego</h2>
+            <p class="mb-4" style="color: var(--text-muted);">Modificando datos de: <strong class="text-white">{{ juego.titulo }}</strong></p>
+
+            <form method="POST" novalidate>
                 {% csrf_token %}
-                {{ form.as_p }}
-                <div class="d-flex gap-3 mt-4">
-                    <button type="submit" class="btn btn-warning w-50 font-gamer fw-bold text-dark">ACTUALIZAR</button>
-                    <a href="{% url 'lista_videojuegos' %}" class="btn btn-outline-secondary w-50 font-gamer fw-bold text-white">CANCELAR</a>
+
+                <!-- Título -->
+                <div class="mb-3">
+                    <label for="{{ form.titulo.id_for_label }}">{{ form.titulo.label }}</label>
+                    {{ form.titulo }}
+                    {% if form.titulo.errors %}
+                        {% for error in form.titulo.errors %}
+                            <div class="invalid-feedback-custom"><i class="bi bi-exclamation-circle me-1"></i>{{ error }}</div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+
+                <!-- Plataforma -->
+                <div class="mb-3">
+                    <label for="{{ form.plataforma.id_for_label }}">{{ form.plataforma.label }}</label>
+                    {{ form.plataforma }}
+                    {% if form.plataforma.errors %}
+                        {% for error in form.plataforma.errors %}
+                            <div class="invalid-feedback-custom"><i class="bi bi-exclamation-circle me-1"></i>{{ error }}</div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+
+                <div class="row">
+                    <!-- Precio -->
+                    <div class="col-12 col-sm-6 mb-3">
+                        <label for="{{ form.precio.id_for_label }}">{{ form.precio.label }}</label>
+                        {{ form.precio }}
+                        {% if form.precio.errors %}
+                            {% for error in form.precio.errors %}
+                                <div class="invalid-feedback-custom"><i class="bi bi-exclamation-circle me-1"></i>{{ error }}</div>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+
+                    <!-- Stock -->
+                    <div class="col-12 col-sm-6 mb-3">
+                        <label for="{{ form.stock.id_for_label }}">{{ form.stock.label }}</label>
+                        {{ form.stock }}
+                        {% if form.stock.errors %}
+                            {% for error in form.stock.errors %}
+                                <div class="invalid-feedback-custom"><i class="bi bi-exclamation-circle me-1"></i>{{ error }}</div>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="d-flex gap-3 mt-4 pt-2 border-top" style="border-color: var(--border) !important;">
+                    <button type="submit" class="btn btn-edit-custom w-50 py-2">
+                        <i class="bi bi-floppy me-1"></i>Actualizar cambios
+                    </button>
+                    <a href="{% url 'lista_videojuegos' %}" class="btn btn-outline-custom w-50 py-2 text-center">
+                        <i class="bi bi-x-lg me-1"></i>Cancelar
+                    </a>
                 </div>
             </form>
         </div>
     </div>
-</body>
-</html>
+{% endblock %}

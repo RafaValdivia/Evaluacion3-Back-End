@@ -1,5 +1,9 @@
 from django.contrib import admin
 from .models import Videojuego
 
-# Register your models here.
-admin.site.register(Videojuego)
+
+@admin.register(Videojuego)
+class VideojuegoAdmin(admin.ModelAdmin):
+    list_display = ('titulo', 'plataforma', 'precio', 'stock')
+    list_filter = ('plataforma',)
+    search_fields = ('titulo',)
