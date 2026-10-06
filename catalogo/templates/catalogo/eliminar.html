@@ -1,0 +1,25 @@
+{% extends 'catalogo/base.html' %}
+
+{% block title %}GamerShop | Eliminar Videojuego{% endblock %}
+
+{% block content %}
+    <div class="d-flex justify-content-center">
+        <div class="col-12 col-md-7 col-lg-5 form-container p-4 p-md-5 text-center" style="border-color: rgba(239, 68, 68, 0.4) !important;">
+            <span class="badge-role is-admin mb-3 d-inline-block">
+                <i class="bi bi-shield-check me-1"></i>Panel de administrador
+            </span>
+            <i class="bi bi-exclamation-triangle display-5 mb-3 d-block" style="color: var(--danger);"></i>
+            <h2 class="font-heading fw-bold text-white mb-3">Confirmar eliminación</h2>
+            <p class="mb-4" style="color: var(--text-muted);">
+                ¿Confirmas eliminar <strong class="text-white">"{{ juego.titulo }}"</strong> del inventario? Esta acción no se puede deshacer.
+            </p>
+            <form method="POST">
+                {% csrf_token %}
+                <div class="d-flex gap-3 justify-content-center">
+                    <button type="submit" class="btn btn-delete-custom px-4 py-2">Sí, eliminar</button>
+                    <a href="{% url 'lista_videojuegos' %}" class="btn btn-outline-custom px-4 py-2">Cancelar</a>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

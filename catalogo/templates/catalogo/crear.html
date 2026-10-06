@@ -1,0 +1,23 @@
+{% extends 'catalogo/base.html' %}
+
+{% block title %}GamerShop | Registrar Videojuego{% endblock %}
+
+{% block content %}
+    <div class="d-flex justify-content-center">
+        <div class="col-12 col-md-7 col-lg-5 form-container p-4 p-md-5">
+            <span class="badge-role is-admin mb-3 d-inline-block">
+                <i class="bi bi-shield-check me-1"></i>Panel de administrador
+            </span>
+            <h2 class="font-heading fw-bold text-white mb-1">Registrar nuevo juego</h2>
+            <p class="mb-4" style="color: var(--text-muted);">Este título quedará visible de inmediato en el catálogo público.</p>
+            <form method="POST">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <div class="d-flex gap-3 mt-4">
+                    <button type="submit" class="btn btn-primary-custom w-50 py-2">Guardar</button>
+                    <a href="{% url 'lista_videojuegos' %}" class="btn btn-outline-custom w-50 py-2">Volver</a>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
