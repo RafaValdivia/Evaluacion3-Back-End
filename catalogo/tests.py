@@ -63,6 +63,50 @@ class VideojuegoValidationTest(TestCase):
         self.assertFalse(form.is_valid())
         self.assertIn('titulo', form.errors)
 
+    def test_form_price_exceeds_limit(self):
+        form_data = {
+            'titulo': 'Juego Muy Caro',
+            'plataforma': 'PS5',
+            'precio': 250001,
+            'stock': 10
+        }
+        form = VideojuegoForm(data=form_data)
+        self.assertFalse(form.is_valid())
+        self.assertIn('precio', form.errors)
+
+    def test_form_price_exceeds_six_digits(self):
+        form_data = {
+            'titulo': 'Juego Millonario',
+            'plataforma': 'PC',
+            'precio': 1000000,
+            'stock': 10
+        }
+        form = VideojuegoForm(data=form_data)
+        self.assertFalse(form.is_valid())
+        self.assertIn('precio', form.errors)
+
+    def test_form_stock_exceeds_limit(self):
+        form_data = {
+            'titulo': 'Juego Con Mucho Stock',
+            'plataforma': 'PS5',
+            'precio': 49990,
+            'stock': 101
+        }
+        form = VideojuegoForm(data=form_data)
+        self.assertFalse(form.is_valid())
+        self.assertIn('stock', form.errors)
+
+    def test_form_stock_exceeds_three_digits(self):
+        form_data = {
+            'titulo': 'Juego Stock Masivo',
+            'plataforma': 'Nintendo Switch',
+            'precio': 49990,
+            'stock': 1000
+        }
+        form = VideojuegoForm(data=form_data)
+        self.assertFalse(form.is_valid())
+        self.assertIn('stock', form.errors)
+
 
 class ViewsAccessControlTest(TestCase):
     def setUp(self):

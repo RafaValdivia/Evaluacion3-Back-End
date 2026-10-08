@@ -27,18 +27,22 @@ class Videojuego(models.Model):
         verbose_name="Plataforma"
     )
     
-    # MODIFICACIÓN: El límite máximo de precio ahora es de $500.000 CLP
+    # Límite máximo de precio: $250.000 CLP (hasta 6 dígitos)
     precio = models.IntegerField(
-    validators=[
-        MinValueValidator(1),
-        MaxValueValidator(500000, message="El precio no puede superar los $500.000 CLP.")
-    ],
-    verbose_name="Precio (CLP)"
-)
+        validators=[
+            MinValueValidator(1, message="El precio debe ser al menos de $1 CLP."),
+            MaxValueValidator(250000, message="El precio no puede superar los $250.000 CLP.")
+        ],
+        verbose_name="Precio (CLP)"
+    )
     
+    # Límite máximo de stock: 100 unidades (hasta 3 dígitos)
     stock = models.IntegerField(
         default=0, 
-        validators=[MinValueValidator(0)],
+        validators=[
+            MinValueValidator(0, message="El stock no puede ser negativo."),
+            MaxValueValidator(100, message="El stock no puede superar las 100 unidades.")
+        ],
         verbose_name="Stock disponible"
     )
     fecha_registro = models.DateTimeField(

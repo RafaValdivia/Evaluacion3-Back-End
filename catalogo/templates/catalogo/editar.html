@@ -45,6 +45,9 @@
                     <div class="col-12 col-sm-6 mb-3">
                         <label for="{{ form.precio.id_for_label }}">{{ form.precio.label }}</label>
                         {{ form.precio }}
+                        {% if form.precio.help_text %}
+                            <div class="form-text small text-secondary">{{ form.precio.help_text }}</div>
+                        {% endif %}
                         {% if form.precio.errors %}
                             {% for error in form.precio.errors %}
                                 <div class="invalid-feedback-custom"><i class="bi bi-exclamation-circle me-1"></i>{{ error }}</div>
@@ -56,6 +59,9 @@
                     <div class="col-12 col-sm-6 mb-3">
                         <label for="{{ form.stock.id_for_label }}">{{ form.stock.label }}</label>
                         {{ form.stock }}
+                        {% if form.stock.help_text %}
+                            <div class="form-text small text-secondary">{{ form.stock.help_text }}</div>
+                        {% endif %}
                         {% if form.stock.errors %}
                             {% for error in form.stock.errors %}
                                 <div class="invalid-feedback-custom"><i class="bi bi-exclamation-circle me-1"></i>{{ error }}</div>
@@ -75,4 +81,26 @@
             </form>
         </div>
     </div>
+
+<script>
+    // Limitar estrictamente los dígitos en tiempo real
+    const precioInput = document.getElementById('id_precio');
+    const stockInput = document.getElementById('id_stock');
+
+    if (precioInput) {
+        precioInput.addEventListener('input', function() {
+            if (this.value.length > 6) {
+                this.value = this.value.slice(0, 6);
+            }
+        });
+    }
+
+    if (stockInput) {
+        stockInput.addEventListener('input', function() {
+            if (this.value.length > 3) {
+                this.value = this.value.slice(0, 3);
+            }
+        });
+    }
+</script>
 {% endblock %}

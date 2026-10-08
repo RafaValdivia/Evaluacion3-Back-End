@@ -81,4 +81,26 @@
             </form>
         </div>
     </div>
+
+<script>
+    // Limitar estrictamente los dígitos en tiempo real
+    const precioInput = document.getElementById('id_precio');
+    const stockInput = document.getElementById('id_stock');
+
+    if (precioInput) {
+        precioInput.addEventListener('input', function() {
+            if (this.value.length > 6) {
+                this.value = this.value.slice(0, 6);
+            }
+        });
+    }
+
+    if (stockInput) {
+        stockInput.addEventListener('input', function() {
+            if (this.value.length > 3) {
+                this.value = this.value.slice(0, 3);
+            }
+        });
+    }
+</script>
 {% endblock %}

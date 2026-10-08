@@ -115,12 +115,17 @@
         padding: 6px 10px;
         border-radius: 8px;
         cursor: pointer;
-        transition: color 0.2s ease, background-color 0.2s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.15rem;
+        transition: color 0.2s ease, background-color 0.2s ease, transform 0.15s ease;
     }
 
     .btn-toggle-eye:hover {
-        color: var(--text);
-        background: rgba(255, 255, 255, 0.05);
+        color: var(--primary);
+        background: rgba(79, 124, 255, 0.12);
+        transform: scale(1.08);
     }
 
     /* Mensaje de error personalizado */
@@ -202,8 +207,14 @@
                 <div class="alert-login-error mb-4">
                     <i class="bi bi-exclamation-triangle-fill fs-5 flex-shrink-0 text-danger"></i>
                     <div>
-                        <strong>Credenciales inválidas</strong>
-                        <div class="small">El usuario o la contraseña ingresados son incorrectos.</div>
+                        <strong>Error al iniciar sesión</strong>
+                        {% if form.non_field_errors %}
+                            {% for error in form.non_field_errors %}
+                                <div class="small">{{ error }}</div>
+                            {% endfor %}
+                        {% else %}
+                            <div class="small">Usuario o contraseña incorrectos. Por favor, verifica tus datos e inténtalo de nuevo.</div>
+                        {% endif %}
                     </div>
                 </div>
             {% endif %}
@@ -251,7 +262,8 @@
                         <button type="button" 
                                 class="btn-toggle-eye" 
                                 id="btnTogglePassword" 
-                                title="Mostrar / ocultar contraseña"
+                                title="Mostrar contraseña"
+                                aria-label="Mostrar u ocultar contraseña"
                                 tabindex="-1">
                             <i class="bi bi-eye" id="iconEye"></i>
                         </button>
@@ -284,23 +296,32 @@
 </div>
 
 <script>
-    // Alternar visibilidad de contraseña
+    // Alternar visibilidad de contraseña sin interrumpir la escritura
     const btnToggle = document.getElementById('btnTogglePassword');
     const inputPassword = document.getElementById('id_password');
     const iconEye = document.getElementById('iconEye');
 
     if (btnToggle && inputPassword && iconEye) {
-        btnToggle.addEventListener('click', function() {
-            if (inputPassword.type === 'password') {
-                inputPassword.type = 'text';
-                iconEye.classList.remove('bi-eye');
-                iconEye.classList.add('bi-eye-slash');
-            } else {
-                inputPassword.type = 'password';
-                iconEye.classList.remove('bi-eye-slash');
-                iconEye.classList.add('bi-eye');
-            }
+        btnToggle.addEventListener('click', function(e) {
+            e.preventDefault();
+            const isPassword = inputPassword.type === 'password';
+            
+            // Alternar tipo de input
+            inputPassword.type = isPassword ? 'text' : 'password';
+            
+            // Alternar icono entre ojo abierto y ojo tachado
+            iconEye.classList.toggle('bi-eye', !isPassword);
+            iconEye.classList.toggle('bi-eye-slash', isPassword);
+            
+            // Actualizar tooltip y aria-label
+            const titleText = isPassword ? 'Ocultar contraseña' : 'Mostrar contraseña';
+            btnToggle.title = titleText;
+            btnToggle.setAttribute('aria-label', titleText);
+            
+            // Mantener el cursor al final del texto mientras escribe
             inputPassword.focus();
+            const pos = inputPassword.value.length;
+            inputPassword.setSelectionRange(pos, pos);
         });
     }
 </script>
